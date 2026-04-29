@@ -2,7 +2,7 @@ import os
 import pydgraph
 import model
 
-DGRAPH_URI = '127.0.0.1:9080'
+DGRAPH_URI = 'localhost:9081'
 
 
 def print_menu():
