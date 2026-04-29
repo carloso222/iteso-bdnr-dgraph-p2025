@@ -1,0 +1,6 @@
+id,nombre,genero,edad,lat,lon,cursos_ids,tareas_ids,examenes_ids,certs_ids
+A001,Carlos Gomez,Masculino,21,20.6534,-103.3264,C001|C002,T001|T003,E001|E003,CERT001
+A002,Camila Perez,Femenino,22,19.4326,-99.1332,C001|C003,T002|T004,E002|E005,CERT002
+A003,Sofia Martinez,Femenino,20,25.6866,-100.3161,C002|C004,T005,E004,CERT003
+A004,Diego Hernandez,Masculino,23,20.9674,-89.6230,C003,T006,E006,
+A005,Claudia Nunez,Femenino,21,20.6534,-103.3264,C001|C002,T001|T002,E001|E003,CERT004

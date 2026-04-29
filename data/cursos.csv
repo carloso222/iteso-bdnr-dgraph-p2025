@@ -1,0 +1,5 @@
+id,nombre,categoria,examenes_ids,tareas_ids
+C001,Matematicas,Ciencias,E001|E002,T001|T002
+C002,Bases de Datos,Tecnologia,E003|E004,T003|T004
+C003,Programacion Web,Tecnologia,E005|E006,T005|T006
+C004,Literatura,Humanidades,E001,T001
