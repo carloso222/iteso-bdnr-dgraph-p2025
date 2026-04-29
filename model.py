@@ -67,7 +67,7 @@ def set_schema(client):
 
     tarea.id:            string @index(exact) .
     tarea.fecha_entrega: datetime .
-    tarea.calificacion:  float .
+    tarea.calificacion:  float    @index(float) .
 
     examen.id:           string @index(exact) .
     examen.preguntas:    int    @index(int) .
@@ -305,13 +305,13 @@ def alumnos_con_certificado(client):
 
 
 def ranking_alumnos_paginado(client, pagina, tam_pagina):
-    """Query 5: Ranking de alumnos por calificacion de examen, con orden y paginacion."""
+    """Query 5: Ranking de alumnos por calificacion de examen (desc), con paginacion."""
     offset = (pagina - 1) * tam_pagina
     query = f"""{{
-        ranking(func: has(presenta), orderasc: alumno.nombre, first: {tam_pagina}, offset: {offset}) {{
+        ranking(func: has(presenta), first: {tam_pagina}, offset: {offset}) {{
             alumno.nombre
             alumno.edad
-            presenta(orderasc: examen.calificacion) {{
+            presenta(orderdesc: examen.calificacion) {{
                 examen.id
                 examen.calificacion
             }}
@@ -319,11 +319,28 @@ def ranking_alumnos_paginado(client, pagina, tam_pagina):
     }}"""
     res = client.txn(read_only=True).query(query)
     data = json.loads(res.json)
-    resultados = data.get("ranking", [])
-    print(f"\nPagina {pagina} (mostrando {tam_pagina} resultados, offset {offset}):")
-    print(f"Alumnos en esta pagina: {len(resultados)}")
-    print(json.dumps(data, indent=2, ensure_ascii=False))
 
+    # Ordenar en Python por la calificacion mas alta de cada alumno
+    alumnos = data.get("ranking", [])
+    alumnos_ordenados = sorted(
+        alumnos,
+        key=lambda a: max(
+            (e.get("examen.calificacion", 0) for e in a.get("presenta", [])),
+            default=0
+        ),
+        reverse=True  # orderdesc: el mejor primero
+    )
+
+    print(f"\nPagina {pagina} (mostrando {tam_pagina} resultados, offset {offset}):")
+    print(f"Alumnos en esta pagina: {len(alumnos_ordenados)}")
+    for i, alumno in enumerate(alumnos_ordenados, start=1):
+        mejor_cal = max(
+            (e.get("examen.calificacion", 0) for e in alumno.get("presenta", [])),
+            default=0
+        )
+        print(f"  {i}. {alumno.get('alumno.nombre')} — mejor examen: {mejor_cal}")
+    print("\nDetalle completo:")
+    print(json.dumps({"ranking": alumnos_ordenados}, indent=2, ensure_ascii=False))
 
 def contar_alumnos_por_curso(client):
     """Query 6: Contar alumnos inscritos en cada curso."""
