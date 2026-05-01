@@ -20,12 +20,9 @@ def print_menu():
         11: "Eliminar todos los datos",
         0:  "Salir",
     }
-    print("\n" + "="*50)
     print("         SISTEMA ESCOLAR - DGRAPH")
-    print("="*50)
     for key, value in options.items():
         print(f"  {key:2} -- {value}")
-    print("="*50)
 
 
 def create_client_stub():
